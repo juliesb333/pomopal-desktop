@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-shadow: none;
+  }
+
+  html,
+  body,
+  #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: none;
+    outline: none;
+    background: none !important;
+    background-color: transparent !important;
+  }
+
+  body {
+    font-family: 'SF Pro Rounded', 'Nunito', 'Avenir Next', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+  }
+
+  main,
+  div,
+  button {
+    background-color: transparent;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* ─── Floating companion — no window-like chrome ─── */
+@layer components {
+  .companion-shell {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.25rem;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+  }
+
+  .companion-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+  }
+
+  /* ─── Tomato progress (static stages, no animation) ─── */
+  .tomato-progress {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    background: transparent;
+    line-height: 0;
+    transition: margin-top 0.16s ease;
+  }
+
+  .tomato-progress--menu-open {
+    margin-top: 1.9rem;
+  }
+
+  .tomato-progress-button {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    line-height: 0;
+    cursor: grab;
+    touch-action: none;
+    -webkit-app-region: no-drag;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tomato-progress-button:active {
+    cursor: grabbing;
+  }
+
+  .tomato-progress-button:focus-visible {
+    outline: 2px solid rgba(255, 183, 197, 0.9);
+    outline-offset: 4px;
+    border-radius: 999px;
+  }
+
+  .tomato-progress-img {
+    display: block;
+    width: 96px;
+    max-height: 96px;
+    height: auto;
+    object-fit: contain;
+    object-position: bottom center;
+    background: transparent;
+    pointer-events: none;
+    filter:
+      drop-shadow(0 2px 6px rgba(72, 52, 64, 0.14))
+      drop-shadow(0 8px 18px rgba(72, 52, 64, 0.12))
+      drop-shadow(0 4px 12px rgba(255, 120, 100, 0.2));
+  }
+
+  .tomato-options-menu {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    border-radius: 999px;
+    background: rgba(255, 252, 254, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    line-height: 1;
+    transform: translate(-50%, -108%);
+    -webkit-app-region: no-drag;
+  }
+
+  .tomato-click-time {
+    align-self: center;
+    margin-top: 0.35rem;
+    color: #6b4f5a;
+    font-size: 1.45rem;
+    line-height: 1;
+    text-shadow: none;
+  }
+
+  .tomato-options-menu button {
+    display: inline-flex;
+    width: 1.45rem;
+    height: 1.45rem;
+    min-width: 1.45rem;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    padding: 0;
+    background: transparent;
+    color: #7a3d52;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+
+  .tomato-options-menu button:hover,
+  .tomato-options-menu button:focus-visible {
+    background: rgba(255, 183, 197, 0.32);
+    outline: none;
+  }
+
+  .tomato-options-menu button:active {
+    transform: scale(0.95);
+  }
+
+  .session-badge {
+    color: rgba(232, 160, 180, 0.75);
+    filter: drop-shadow(0 0 6px rgba(255, 252, 254, 0.9));
+    text-shadow: none;
+  }
+}
