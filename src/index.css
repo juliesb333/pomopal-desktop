@@ -158,6 +158,16 @@
     text-shadow: none;
   }
 
+  .tomato-session-count {
+    align-self: center;
+    margin: 0.22rem 0 0;
+    color: rgba(232, 160, 180, 0.82);
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1;
+    text-shadow: none;
+  }
+
   .tomato-options-menu button {
     display: inline-flex;
     width: 1.45rem;
@@ -188,9 +198,4 @@
     transform: scale(0.95);
   }
 
-  .session-badge {
-    color: rgba(232, 160, 180, 0.75);
-    filter: drop-shadow(0 0 6px rgba(255, 252, 254, 0.9));
-    text-shadow: none;
-  }
 }

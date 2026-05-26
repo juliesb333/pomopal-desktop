@@ -14,6 +14,7 @@ interface TomatoProgressProps {
   onStart: () => void
   onPause: () => void
   onRestart: () => void
+  sessionCount: number
 }
 
 interface PointerDragState {
@@ -26,6 +27,7 @@ interface PointerDragState {
 }
 
 const DRAG_THRESHOLD_PX = 5
+const INTERACTIVE_SELECTOR = '[data-pomopal-interactive="true"]'
 
 export default function TomatoProgress({
   mode,
@@ -34,6 +36,7 @@ export default function TomatoProgress({
   onStart,
   onPause,
   onRestart,
+  sessionCount,
 }: TomatoProgressProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -49,6 +52,36 @@ export default function TomatoProgress({
       const img = new Image()
       img.src = path
     })
+  }, [])
+
+  useEffect(() => {
+    let isIgnoringMouseEvents = true
+
+    const setMouseEventsIgnored = (ignored: boolean) => {
+      if (isIgnoringMouseEvents === ignored) return
+
+      isIgnoringMouseEvents = ignored
+      window.electronAPI?.setMouseEventsIgnored(ignored)
+    }
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const target = document.elementFromPoint(event.clientX, event.clientY)
+      setMouseEventsIgnored(!target?.closest(INTERACTIVE_SELECTOR))
+    }
+
+    const handleMouseLeave = () => {
+      setMouseEventsIgnored(true)
+    }
+
+    window.electronAPI?.setMouseEventsIgnored(true)
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseleave', handleMouseLeave)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseleave', handleMouseLeave)
+      window.electronAPI?.setMouseEventsIgnored(false)
+    }
   }, [])
 
   useEffect(() => {
@@ -159,6 +192,7 @@ export default function TomatoProgress({
       <button
         type="button"
         className="tomato-progress-button"
+        data-pomopal-interactive="true"
         aria-label={`${label}. Open tomato options or drag to move window.`}
         aria-haspopup="menu"
         aria-expanded={isMenuOpen}
@@ -180,6 +214,7 @@ export default function TomatoProgress({
           <button
             type="button"
             role="menuitem"
+            data-pomopal-interactive="true"
             aria-label={status === 'running' ? 'Pause timer' : 'Start timer'}
             title={status === 'running' ? 'Pause' : 'Start'}
             onClick={handleStartPause}
@@ -189,6 +224,7 @@ export default function TomatoProgress({
           <button
             type="button"
             role="menuitem"
+            data-pomopal-interactive="true"
             aria-label="Restart timer"
             title="Restart"
             onClick={handleRestart}
@@ -198,6 +234,7 @@ export default function TomatoProgress({
           <button
             type="button"
             role="menuitem"
+            data-pomopal-interactive="true"
             aria-label="Quit app"
             title="Quit"
             onClick={handleQuit}
@@ -210,10 +247,17 @@ export default function TomatoProgress({
       {isMenuOpen ? (
         <time
           className="tomato-click-time font-display font-semibold tabular-nums tracking-wide"
+          data-pomopal-interactive="true"
           dateTime={`PT${secondsLeft}S`}
         >
           {formatTime(secondsLeft)}
         </time>
+      ) : null}
+
+      {isMenuOpen && sessionCount > 0 ? (
+        <p className="tomato-session-count" data-pomopal-interactive="true">
+          {sessionCount} today
+        </p>
       ) : null}
     </div>
   )

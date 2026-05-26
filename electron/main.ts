@@ -6,7 +6,7 @@ const isMac = process.platform === 'darwin'
 
 /** Compact bounds — only enough space for the tomato, timer, and tiny menu */
 const WINDOW_WIDTH = 180
-const WINDOW_HEIGHT = 205
+const WINDOW_HEIGHT = 160
 
 interface MoveWindowPayload {
   deltaX: number
@@ -58,6 +58,7 @@ function createWindow() {
 
   mainWindow.setBackgroundColor('#00000000')
   mainWindow.setHasShadow(false)
+  mainWindow.setIgnoreMouseEvents(true, { forward: true })
 
   if (isMac) {
     mainWindow.setAlwaysOnTop(true, 'floating')
@@ -100,6 +101,15 @@ ipcMain.on('window:move', (event, payload: unknown) => {
     Math.round(y + payload.deltaY),
     false,
   )
+})
+
+ipcMain.on('window:set-mouse-events-ignored', (event, ignored: unknown) => {
+  if (typeof ignored !== 'boolean') return
+
+  const window = BrowserWindow.fromWebContents(event.sender)
+  if (!window) return
+
+  window.setIgnoreMouseEvents(ignored, ignored ? { forward: true } : undefined)
 })
 
 ipcMain.on('app:quit', () => {

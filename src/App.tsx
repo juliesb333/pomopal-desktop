@@ -1,4 +1,3 @@
-import SessionBadge from './components/SessionBadge'
 import TomatoProgress from './components/TomatoProgress'
 import { usePomodoro } from './hooks/usePomodoro'
 
@@ -14,7 +13,7 @@ export default function App() {
   } = usePomodoro()
 
   return (
-    <main className="companion-shell drag-region">
+    <main className="companion-shell">
       <div className="companion-stack">
         <TomatoProgress
           mode={mode}
@@ -23,11 +22,8 @@ export default function App() {
           onStart={start}
           onPause={pause}
           onRestart={restartFocus}
+          sessionCount={sessionCount}
         />
-
-        <div className="no-drag flex flex-col items-center gap-1">
-          <SessionBadge count={sessionCount} />
-        </div>
       </div>
     </main>
   )

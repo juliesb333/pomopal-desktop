@@ -2,6 +2,7 @@
 
 interface ElectronAPI {
   moveWindow: (deltaX: number, deltaY: number) => void
+  setMouseEventsIgnored: (ignored: boolean) => void
   quitApp: () => void
 }
 
