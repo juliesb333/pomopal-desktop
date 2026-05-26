@@ -149,6 +149,9 @@
   .tomato-click-time {
     align-self: center;
     margin-top: 0.35rem;
+    padding: 0.18rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
     color: #6b4f5a;
     font-size: 1.45rem;
     line-height: 1;

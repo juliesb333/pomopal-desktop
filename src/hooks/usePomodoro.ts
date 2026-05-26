@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   BREAK_DURATION_SECONDS,
   FOCUS_DURATION_SECONDS,
@@ -28,25 +28,16 @@ export function usePomodoro(): UsePomodoroReturn {
   const [secondsLeft, setSecondsLeft] = useState(FOCUS_DURATION_SECONDS)
   const [sessionCount, setSessionCount] = useState(getSessionCount)
 
-  const modeRef = useRef(mode)
-  modeRef.current = mode
-
-  const switchMode = useCallback((nextMode: TimerMode) => {
-    setMode(nextMode)
-    setSecondsLeft(getDurationForMode(nextMode))
-    setStatus('idle')
-  }, [])
-
   const handleTimerComplete = useCallback(() => {
-    if (modeRef.current === 'focus') {
+    if (mode === 'focus') {
       const newCount = getSessionCount() + 1
       saveSessionCount(newCount)
       setSessionCount(newCount)
-      switchMode('break')
-    } else {
-      switchMode('focus')
     }
-  }, [switchMode])
+
+    setStatus('idle')
+    setSecondsLeft(0)
+  }, [mode])
 
   useEffect(() => {
     if (status !== 'running') return
@@ -66,8 +57,13 @@ export function usePomodoro(): UsePomodoroReturn {
   }, [status, handleTimerComplete])
 
   const start = useCallback(() => {
+    if (secondsLeft <= 0) {
+      setMode('focus')
+      setSecondsLeft(FOCUS_DURATION_SECONDS)
+    }
+
     setStatus('running')
-  }, [])
+  }, [secondsLeft])
 
   const pause = useCallback(() => {
     setStatus('paused')
